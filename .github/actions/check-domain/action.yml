@@ -1,0 +1,18 @@
+name: Check domain
+description: Check subdomain registration information
+author: NamNV609
+
+inputs:
+  domainDataUrl:
+    description: Registered domains data URL
+    required: true
+  repoToken:
+    description: GitHub repository token
+    required: true
+  primaryDomain:
+    description: Service primary (base) domain
+    required: true
+
+runs:
+  using: node12
+  main: main.js
