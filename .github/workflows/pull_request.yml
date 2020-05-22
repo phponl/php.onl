@@ -1,0 +1,17 @@
+name: PHPOnl pull request events
+
+on:
+  pull_request:
+    branches:
+      - master
+    type:
+      - opened
+
+jobs:
+  check-domain:
+    if: |
+      github.event.action == 'opened'
+        && contains(toJson(github.event.pull_request.labels), 'register domain')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
