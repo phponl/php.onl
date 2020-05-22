@@ -15,3 +15,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - run: npm install
+      - uses: ./.github/actions/check-domain
+        with:
+          domainDataUrl: ${{ secrets.DOMAIN_DATA_URL }}
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          primaryDomain: php.onl
