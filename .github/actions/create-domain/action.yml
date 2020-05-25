@@ -1,0 +1,15 @@
+name: Create domain
+description: Create subdomain from registration info
+author: NamNV609
+
+inputs:
+  apiUrl:
+    description: DNS API Url
+    required: true
+  apiToken:
+    description: DNS API token
+    required: true
+
+runs:
+  using: node12
+  main: main.js

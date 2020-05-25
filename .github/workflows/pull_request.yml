@@ -6,6 +6,9 @@ on:
       - master
     type:
       - opened
+env:
+  PRIMARY_DOMAIN: php.onl
+  REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
   check-domain:
@@ -21,3 +24,15 @@ jobs:
           domainDataUrl: ${{ secrets.DOMAIN_DATA_URL }}
           repoToken: ${{ secrets.GITHUB_TOKEN }}
           primaryDomain: php.onl
+  create-domain:
+    if: |
+      github.event.action == 'closed' && github.event.pull_request.merged == true
+        && contains(toJson(github.event.pull_request.labels), 'register domain')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: npm install
+      - uses: ./.github/actions/create-domain
+        with:
+          apiUrl: ${{ secrets.DNS_API_URL }}
+          apiToken: ${{ secrets.DNS_API_TOKEN }}
