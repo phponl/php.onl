@@ -2,23 +2,21 @@ const core = require("@actions/core");
 const github = require("@actions/github");
 const request = require("request");
 const util = require("util");
+const ActionCommon = require("../common");
 
 const restrictedDomains = require("../../../restricted_domains.json");
-const primaryDomain = core.getInput("primaryDomain", {required: true});
-const repoToken = core.getInput("repoToken", {required: true});
 const registeredDomainsUrl = core.getInput("domainDataUrl", {required: true});
-const registrationInfoKeys = ["domain", "target", "use_cf", "agree_tos"];
 
 async function run() {
   try {
     const prPayload = github.context.payload.pull_request;
-    const registrationInfo = getRegistrationInfo(prPayload.body);
+    const registrationInfo = ActionCommon.getReigstrationInfo(prPayload.body);
     const checkSummaryObj = {
       valid: isValidSubdomain(registrationInfo.subdomain),
       not_restricted: isNotRestrictedSubdomain(registrationInfo.subdomain),
       available: await isSubdomainAvailability(registrationInfo.subdomain),
-      use_cloudflare: yesNoToBoolean(registrationInfo.use_cf),
-      agree_tos: yesNoToBoolean(registrationInfo.agree_tos)
+      use_cloudflare: ActionCommon.yesNoToBoolean(registrationInfo.use_cf),
+      agree_tos: ActionCommon.yesNoToBoolean(registrationInfo.agree_tos)
     };
 
     const checkSummaryResult = Object.keys(checkSummaryObj).filter((key) => key !== "use_cloudflare")
@@ -34,35 +32,12 @@ async function run() {
   }
 }
 
-function getRegistrationInfo(prBody) {
-  const regData = prBody.split(/\r?\n/);
-  const regInfo = {};
-
-  registrationInfoKeys.forEach((key, idx) => regInfo[key] = regData[idx].split(":").pop().trim());
-  regInfo["subdomain"] = getSubdomainFromDomain(regInfo["domain"]);
-
-  return regInfo;
-}
-
-function getSubdomainFromDomain(domainName) {
-  const primaryDomainLength = primaryDomain.split(".").length;
-  const subdomainName = domainName.split(".");
-
-  subdomainName.splice(primaryDomainLength * -1)
-
-  return subdomainName.join("");
-}
-
 function isValidSubdomain(subdomainName) {
   return subdomainName && /^[a-z0-9]+\-?[a-z0-9]+$/.test(subdomainName);
 }
 
 function isNotRestrictedSubdomain(subdomainName) {
   return restrictedDomains.indexOf(subdomainName) == -1;
-}
-
-function yesNoToBoolean(str) {
-  return /^yes$/i.test(str);
 }
 
 function boolToEmoji(booleanValue) {
@@ -83,7 +58,6 @@ async function isSubdomainAvailability(subdomainName) {
 
 async function commentCheckSummaryToPR(prNumber, checkSummaryObj) {
   const summaryContent = ["| Name | Result |", "| --- | --- |"];
-  const githubClient = new github.GitHub(repoToken);
   let availableContent = `| Subdomain available | ${boolToEmoji(checkSummaryObj.available)} |`;
 
   if (checkSummaryObj.available !== true) {
@@ -96,11 +70,7 @@ async function commentCheckSummaryToPR(prNumber, checkSummaryObj) {
   summaryContent.push(`| Use Cloudflare proxy | ${boolToEmoji(checkSummaryObj.use_cloudflare)} |`);
   summaryContent.push(`| Agree with [**ToS**]() | ${boolToEmoji(checkSummaryObj.agree_tos)} |`);
 
-  await githubClient.issues.createComment({
-    ...github.context.repo,
-    issue_number: prNumber,
-    body: summaryContent.join("\r\n")
-  });
+  return ActionCommon.commentToPR(prNumber, summaryContent.join("\r\n"));
 }
 
 run();
