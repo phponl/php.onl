@@ -22,6 +22,8 @@ async function run() {
     } else {
       core.setFailed("Error :(");
     }
+
+    await storeLog(JSON.stringify(response.body));
   } catch (error) {
     core.setFailed(error);
   }
@@ -49,6 +51,13 @@ async function createSubdoamin(registrationInfoObj) {
     },
     json: reqJsonBody
   });
+}
+
+async function storeLog(logContent) {
+  const loggerUrl = core.getInput("loggerUrl", {required: true});
+  const requestPromise = util.promisify(request);
+
+  return await requestPromise.post(loggerUrl, {form: {content: logContent}});
 }
 
 run();
