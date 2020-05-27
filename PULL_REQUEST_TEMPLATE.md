@@ -1,4 +1,4 @@
-- Subdomain: _Your subdomain_
-- Target: _Domain target_
-- Use Cloudflare Proxy: _Yes/No_
-- I agree with TOS: _Yes/No_
+- Subdomain: Full_Subdomain
+- Target: Domain_Target
+- Use Cloudflare Proxy: Yes
+- I agree with TOS: Yes
