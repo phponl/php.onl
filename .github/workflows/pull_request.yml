@@ -6,6 +6,7 @@ on:
       - master
     type:
       - opened
+      - closed
 env:
   PRIMARY_DOMAIN: php.onl
   REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
