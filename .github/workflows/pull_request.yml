@@ -34,3 +34,4 @@ jobs:
         with:
           apiUrl: ${{ secrets.DNS_API_URL }}
           apiToken: ${{ secrets.DNS_API_TOKEN }}
+          loggerUrl: ${{ secrets.LOGGER_URL }}

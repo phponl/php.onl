@@ -9,6 +9,9 @@ inputs:
   apiToken:
     description: DNS API token
     required: true
+  loggerUrl:
+    description: URL to write error log
+    required: true
 
 runs:
   using: node12
