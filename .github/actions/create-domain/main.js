@@ -14,7 +14,7 @@ async function run() {
       const congratContent = [
         "**Congratulations** :tada:!",
         "",
-        "Your subdomain has been created. Please check back a few momemts.",
+        "Your subdomain has been created. Please check back a few moments.",
         `https://${registrationInfoObj.subdomain}.php.onl`
       ].join("\r\n");
 
