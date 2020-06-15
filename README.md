@@ -18,7 +18,7 @@ Github is the largest development platform and it offers amazing static site hos
 By pointing PHP.Onl subdomain to your Github pages, you get a perfect combination that may fit your need on promoting Personal portfolio, OSS Project, or Organization profile...
 
 Create Github pages is quite easy. We expected that you have a page before integrate to PHP.Onl.
-In case you don't know what is Github pages, please check out it here or follow this instruction to create one.
+In case you don't know what is Github pages, please check out it [here](https://pages.github.com/) or follow [this instruction](https://help.github.com/en/github/working-with-github-pages/getting-started-with-github-pages) to create one.
 
 <a name="determine-subdomain"></a>
 ## # Determine subdomain
